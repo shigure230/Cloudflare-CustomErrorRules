@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>One more step</title>
+<style>
+  :root{
+    --bg:#1c1c1f;
+    --bg-2:#26262a;
+    --ink:#ded9d1;
+    --muted:#9b958c;
+    --accent:#ffa066;
+    --accent-soft:rgba(255,160,102,.15);
+    --danger:#ff5a4d;
+    --line:rgba(255,255,255,.09);
+    --dot:rgba(255,255,255,.10);
+    --mono:"IBM Plex Mono","SF Mono","JetBrains Mono","PingFang SC","Hiragino Sans","Hiragino Kaku Gothic ProN","Microsoft YaHei","Yu Gothic",ui-monospace,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--mono);
+    min-height:100dvh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+    overflow:hidden;
+    padding:32px 24px;
+    padding-top:max(32px,env(safe-area-inset-top));
+    padding-bottom:max(32px,env(safe-area-inset-bottom));
+  }
+  body::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background-image:radial-gradient(circle, var(--dot) 1px, transparent 1px);
+    background-size:22px 22px;
+    background-position:11px 11px;
+    mask-image:radial-gradient(circle at 50% 34%,#000 0%,rgba(0,0,0,.35) 55%,transparent 80%);
+    -webkit-mask-image:radial-gradient(circle at 50% 34%,#000 0%,rgba(0,0,0,.35) 55%,transparent 80%);
+  }
+  body::after{
+    content:"";
+    position:absolute;
+    width:680px;height:680px;
+    top:-220px;left:50%;
+    transform:translateX(-50%);
+    background:radial-gradient(circle,var(--accent-soft) 0%,transparent 65%);
+    pointer-events:none;
+  }
+  .wrap{
+    position:relative;
+    z-index:2;
+    text-align:center;
+    width:100%;
+    max-width:680px;
+    animation:rise .8s cubic-bezier(.2,.7,.2,1) both;
+  }
+  @keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+  .tag{
+    display:inline-block;
+    font-size:12px;
+    letter-spacing:.32em;
+    text-transform:uppercase;
+    color:var(--accent);
+    border:1px solid var(--accent-soft);
+    background:var(--accent-soft);
+    padding:6px 14px;
+    border-radius:999px;
+    margin-bottom:34px;
+  }
+  @keyframes pulse{0%{transform:scale(.85);opacity:.7}70%{opacity:0}100%{transform:scale(1.5);opacity:0}}
+  h1{
+    font-size:clamp(22px,5vw,32px);
+    font-weight:700;
+    margin-bottom:14px;
+    letter-spacing:.01em;
+  }
+  p.desc{
+    font-size:14.5px;
+    line-height:1.7;
+    color:var(--muted);
+    max-width:460px;
+    margin:0 auto 30px;
+  }
+  .captcha-area{margin-bottom:34px}
+  .cookie-warn{font-size:13px;color:var(--danger);margin-bottom:16px}
+  .widget-wrap{min-height:65px;display:flex;align-items:center;justify-content:center}
+  .cols{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:22px;
+    text-align:left;
+    margin-bottom:34px;
+  }
+  .card{
+    background:var(--bg-2);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:22px 22px 24px;
+  }
+  .card h2{font-size:14px;font-weight:600;color:var(--accent);margin-bottom:10px;letter-spacing:.02em}
+  .card p{font-size:13px;line-height:1.65;color:var(--muted)}
+  .card a{color:var(--accent);text-decoration:none}
+  .card a:hover{text-decoration:underline}
+  .meta{
+    display:flex;flex-wrap:wrap;justify-content:center;gap:10px 26px;
+    font-size:12.5px;color:var(--muted);
+    border-top:1px solid var(--line);padding-top:24px;margin-bottom:8px;
+  }
+  .meta .k{color:rgba(255,255,255,.35);margin-right:7px;letter-spacing:.04em}
+  .meta .v{color:var(--ink)}
+  .contact{margin-top:22px;font-size:13px;color:var(--muted)}
+  .contact a{color:var(--accent);text-decoration:none}
+  .contact a:hover{text-decoration:underline}
+  @media(max-width:560px){
+    .cols{grid-template-columns:1fr}
+  }
+</style>
+<meta name="theme-color" content="#f4efe5">
+<script>
+(function () {
+  var theme = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  document.documentElement.setAttribute('data-theme', theme);
+  document.documentElement.style.colorScheme = theme;
+  var meta = document.querySelector('meta[name="theme-color"]');
+  if (meta) meta.setAttribute('content', theme === 'light' ? '#f4efe5' : '#1c1c1f');
+})();
+</script>
+<style id="hefan-theme">
+  /* Light palette — variant A (paper). Dark keeps the original Cloudflare look. */
+  :root{
+    --bg:#f4efe5;
+    --bg-2:#fffdf7;
+    --ink:#241f18;
+    --muted:#6c6357;
+    --accent:#b8480c;
+    --accent-hover:#963a07;
+    --accent-soft:rgba(184,72,12,.12);
+    --on-accent:#fffaf2;
+    --danger:#b3261e;
+    --line:rgba(36,31,24,.10);
+    --dot:rgba(36,31,24,.11);
+    --faint:rgba(36,31,24,.38);
+    --glow:rgba(184,72,12,.16);
+    --shadow:rgba(70,45,20,.16);
+    --glitch:#0e7490;
+    --shield-glow:rgba(156,68,7,.18);
+  }
+  :root[data-theme="dark"]{
+    --bg:#1c1c1f;
+    --bg-2:#26262a;
+    --ink:#ded9d1;
+    --muted:#9b958c;
+    --accent:#ffa066;
+    --accent-hover:#ffb488;
+    --accent-soft:rgba(255,160,102,.15);
+    --on-accent:#15161a;
+    --danger:#ff5a4d;
+    --line:rgba(255,255,255,.09);
+    --faint:rgba(255,255,255,.40);
+    --glow:rgba(255,160,102,.18);
+    --shadow:rgba(0,0,0,.45);
+    --glitch:#3dd7ff;
+    --shield-glow:rgba(255,160,102,.28);
+  }
+
+  html{overflow-x:hidden;background-color:var(--bg)}
+  body{overflow-y:auto;overflow-x:hidden}
+  /* iOS: keep the top edge flat so the status bar / theme-color matches the body */
+  body::after{top:0}
+  .wrap{margin:auto 0}
+
+  /* Keep the status tag above the code, not inline next to it. */
+  .tag{display:block;width:fit-content;margin:0 auto 28px}
+
+  .num{text-shadow:0 0 40px var(--glow)}
+  .num::before{color:var(--glitch)}
+  .home{color:var(--on-accent);background:var(--accent);box-shadow:0 8px 30px var(--shadow)}
+  .home:hover{background:var(--accent-hover);box-shadow:0 12px 38px var(--shadow)}
+  .meta .k{color:var(--faint)}
+
+
+
+  /* Variant A decorations — light only */
+  :root:not([data-theme="dark"]) body::before{background-size:22px 22px}
+  :root:not([data-theme="dark"]) .tag{
+    border-style:dashed;
+    border-radius:4px;
+    letter-spacing:.24em;
+  }
+  :root:not([data-theme="dark"]) .num{text-shadow:0 2px 0 #fff}
+  :root:not([data-theme="dark"]) .home{
+    border-radius:4px;
+    box-shadow:4px 4px 0 var(--ink);
+  }
+  :root:not([data-theme="dark"]) .home:hover{
+    transform:translate(-1px,-3px);
+    box-shadow:6px 7px 0 var(--ink);
+  }
+  :root:not([data-theme="dark"]) .meta{border-top-style:dashed}
+
+  @media (prefers-reduced-motion:reduce){
+    .wrap{animation:none}
+    .num::before,.num::after{animation:none}
+    *{transition:none !important}
+  }
+  /* 警示三角：整体实心，感叹号镂空；偶尔闪一下（和老错误码同款故障效果） */
+  .warn{
+    position:relative;
+    width:74px;height:74px;
+    margin:0 auto;
+    color:var(--accent);
+  }
+  .warn svg{
+    position:absolute;inset:0;
+    width:100%;height:100%;
+    display:block;
+  }
+  .warn .glitch{opacity:0;will-change:transform,opacity}
+  .warn .g1{color:var(--glitch);animation:warnG1 4s infinite steps(2)}
+  .warn .g2{color:var(--ink);animation:warnG2 5.5s infinite steps(2)}
+  @keyframes warnG1{
+    0%,92%,100%{opacity:0;transform:none}
+    93%{opacity:.6;transform:translate(-2px,1px)}
+    96%{opacity:.6;transform:translate(1px,-1px)}
+  }
+  @keyframes warnG2{
+    0%,90%,100%{opacity:0;transform:none}
+    91%{opacity:.5;transform:translate(2px,-1px)}
+    97%{opacity:.5;transform:translate(-1px,2px)}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .warn .g1,.warn .g2{animation:none;opacity:0}
+  }
+
+
+  /* 点阵颜色按主题固定，避免被后定义的 :root 覆盖 */
+  :root[data-theme="dark"]{ --dot:rgba(255,255,255,.10); }
+  :root:not([data-theme="dark"]){ --dot:rgba(36,31,24,.11); }
+</style>
+</head>
+<body>
+
+  <main class="wrap">
+    <span class="tag" data-i18n="tag">CAPTCHA</span>
+
+    <div class="warn" aria-hidden="true">
+      <svg class="base" viewBox="0 0 48 48">
+        <defs>
+          <mask id="warnCut">
+            <rect width="48" height="48" fill="#fff"/>
+            <path d="M24 18.4v10.8" stroke="#000" stroke-width="4.6" stroke-linecap="round" fill="none"/>
+            <circle cx="24" cy="34.9" r="2.4" fill="#000"/>
+          </mask>
+        </defs>
+        <path d="M24 4.5 43.5 41H4.5Z" fill="currentColor" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" mask="url(#warnCut)"/>
+      </svg>
+      <svg class="glitch g1" viewBox="0 0 48 48" aria-hidden="true">
+        <path d="M24 4.5 43.5 41H4.5Z" fill="currentColor" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" mask="url(#warnCut)"/>
+      </svg>
+      <svg class="glitch g2" viewBox="0 0 48 48" aria-hidden="true">
+        <path d="M24 4.5 43.5 41H4.5Z" fill="currentColor" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" mask="url(#warnCut)"/>
+      </svg>
+    </div>
+
+    <h1 data-i18n="title">One more step</h1>
+    <p class="desc" data-i18n="desc">Your request looks a bit unusual. Please complete the verification below to continue.</p>
+
+    <div class="captcha-area">
+      <p class="cookie-warn" id="cookie-alert" data-i18n="cookie_warn" style="display:none">Please enable cookies and reload this page.</p>
+      <div class="widget-wrap">
+::CF_WIDGET_BOX::
+      </div>
+    </div>
+
+    <div class="cols">
+      <div class="card">
+        <h2 data-i18n="why_h">Why am I seeing this?</h2>
+        <p data-i18n="why_b">Your IP may belong to a data center and may not represent normal user traffic.</p>
+      </div>
+      <div class="card">
+        <h2 data-i18n="what_h">What should I do?</h2>
+        <p data-i18n="what_b">Complete the challenge above to continue. If the problem persists, email <a href="mailto:admin@eqi.me">admin@eqi.me</a>.</p>
+      </div>
+    </div>
+
+    <div class="meta" id="meta">
+      <span id="mi-ip"><span class="k" data-i18n="ip">Your IP</span><span class="v" id="m-ip">::CLIENT_IP::</span></span>
+      <span id="mi-ray"><span class="k">Ray ID</span><span class="v" id="m-ray">::RAY_ID::</span></span>
+      <span id="mi-geo"><span class="k" data-i18n="geo">Location</span><span class="v" id="m-geo">::GEO::</span></span>
+    </div>
+
+    <p class="contact" data-i18n="contact">Think this is a mistake? Email <a href="mailto:admin@eqi.me">admin@eqi.me</a>.</p>
+
+    <p class="credit">Hosted by <a href="https://me.shigure.io/" target="_blank" rel="noopener noreferrer">Shigure230</a></p>
+  </main>
+
+<script>
+  var i18n = {
+    zh:{
+      lang:"zh-CN", tag:"人机验证", title:"还有一步",
+      desc:"你的请求看起来有些异常，请完成下方验证以继续访问。",
+      why_h:"为什么需要验证？",
+      why_b:"您的 IP 可能来自于数据中心，不属于正常用户流量。",
+      what_h:"如何通过验证？",
+      what_b:'完成上方的人机验证即可继续访问。如仍有问题，请联系 <a href="mailto:admin@eqi.me">admin@eqi.me</a>。',
+      cookie_warn:"请启用 Cookie 并刷新此页面。",
+      ip:"你的 IP", geo:"地区",
+      contact:'遇到问题？请联系 <a href="mailto:admin@eqi.me">admin@eqi.me</a>。'
+    },
+    ja:{
+      lang:"ja", tag:"認証", title:"もう一ステップ",
+      desc:"あなたのリクエストが不審と判断されました。アクセスを続けるには以下の認証を完了してください。",
+      why_h:"なぜ認証が必要ですか？",
+      why_b:"お使いの IP はデータセンターからのものである可能性があり、通常のユーザートラフィックではない可能性があります。",
+      what_h:"どうすればいいですか？",
+      what_b:'上記の認証を完了するとアクセスできます。問題が続く場合は <a href="mailto:admin@eqi.me">admin@eqi.me</a> までご連絡ください。',
+      cookie_warn:"Cookie を有効にしてページを再読み込みしてください。",
+      ip:"あなたのIP", geo:"地域",
+      contact:'問題がある場合は <a href="mailto:admin@eqi.me">admin@eqi.me</a> までご連絡ください。'
+    },
+    en:{
+      lang:"en", tag:"CAPTCHA", title:"One more step",
+      desc:"Your request looks a bit unusual. Please complete the verification below to continue.",
+      why_h:"Why am I seeing this?",
+      why_b:"Your IP may belong to a data center and may not represent normal user traffic.",
+      what_h:"What should I do?",
+      what_b:'Complete the challenge above to continue. If the problem persists, email <a href="mailto:admin@eqi.me">admin@eqi.me</a>.',
+      cookie_warn:"Please enable cookies and reload this page.",
+      ip:"Your IP", geo:"Location",
+      contact:'Think this is a mistake? Email <a href="mailto:admin@eqi.me">admin@eqi.me</a>.'
+    }
+  };
+
+  function pickLang(){
+    var list=navigator.languages&&navigator.languages.length?navigator.languages:[navigator.language||"en"];
+    for(var i=0;i<list.length;i++){
+      var code=(list[i]||"").toLowerCase();
+      if(code.indexOf("zh")===0)return"zh";
+      if(code.indexOf("ja")===0)return"ja";
+      if(code.indexOf("en")===0)return"en";
+    }
+    return"en";
+  }
+
+  function apply(lang){
+    var t=i18n[lang]||i18n.en;
+    document.documentElement.lang=t.lang;
+    document.title=t.title;
+    document.querySelectorAll("[data-i18n]").forEach(function(el){
+      var k=el.getAttribute("data-i18n");
+      if(!t[k])return;
+      if(k==="what_b"||k==="contact")el.innerHTML=t[k];
+      else el.textContent=t[k];
+    });
+  }
+
+  apply(pickLang());
+
+  function tokenVal(id){
+    var v=(document.getElementById(id).textContent||"").trim();
+    return(v&&v.indexOf("::")===-1)?v:"";
+  }
+  function fillMeta(valId,itemId,val){
+    if(val){document.getElementById(valId).textContent=val;return true;}
+    document.getElementById(itemId).style.display="none";
+    return false;
+  }
+
+  var tIp=tokenVal("m-ip"),tRay=tokenVal("m-ray"),tGeo=tokenVal("m-geo");
+  ["m-ip","m-ray","m-geo"].forEach(function(id){
+    if(!tokenVal(id))document.getElementById(id).textContent="";
+  });
+
+  function finishMeta(trace){
+    trace=trace||{};
+    var hasIp=fillMeta("m-ip","mi-ip",tIp||trace.ip);
+    var hasRay=fillMeta("m-ray","mi-ray",tRay||trace.ray);
+    var hasGeo=fillMeta("m-geo","mi-geo",tGeo||trace.loc);
+    if(!(hasIp||hasRay||hasGeo))document.getElementById("meta").style.display="none";
+  }
+
+  fetch("/cdn-cgi/trace",{cache:"no-store"})
+    .then(function(r){return r.text();})
+    .then(function(txt){
+      var d={};
+      txt.trim().split("\n").forEach(function(line){
+        var i=line.indexOf("=");
+        if(i>0)d[line.slice(0,i)]=line.slice(i+1);
+      });
+      finishMeta(d);
+    })
+    .catch(function(){finishMeta(null);});
+
+</script>
+
+<style>
+  /* ===== 底部信息：IP 打码 + Ray ID 一键复制 ===== */
+  .ip-mask{
+    cursor:pointer;
+    text-decoration:underline dotted;
+    text-decoration-color:var(--faint);
+    text-underline-offset:3px;
+  }
+  .ip-mask:hover{
+    color:var(--ink);
+    text-decoration-color:var(--accent);
+  }
+  .ip-mask:focus-visible{
+    outline:2px solid var(--accent);
+    outline-offset:3px;
+    border-radius:3px;
+  }
+  /* 底部信息：窄屏两行分组（IP + 地区 / Ray ID） */
+  .meta{
+    align-items:center;
+  }
+  .meta > span{
+    display:inline-flex;
+    align-items:center;
+  }
+  @media (max-width:600px){
+    .meta{ gap:8px 18px; }
+    .meta > #mi-ip{ order:1; }
+    .meta > #mi-geo{ order:2; }
+    .meta > #mi-ray{ order:3; flex-basis:100%; justify-content:center; }
+  }
+
+  /* 页脚归属 */
+  .credit{
+    margin-top:20px;
+    text-align:center;
+    font-size:11.5px;
+    line-height:1.6;
+    color:var(--faint);
+    letter-spacing:.02em;
+  }
+  .credit a{
+    color:var(--accent);
+    text-decoration:none;
+    border-bottom:1px solid transparent;
+    transition:color .15s ease, border-color .15s ease;
+  }
+  .credit a:hover{
+    color:var(--accent-hover);
+    border-bottom-color:currentColor;
+  }
+  .copy-id{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:24px;
+    height:24px;
+    margin-left:7px;
+    padding:0;
+    background:transparent;
+    border:1px solid transparent;
+    border-radius:6px;
+    color:var(--muted);
+    cursor:pointer;
+    vertical-align:middle;
+    transition:color .15s ease,background .15s ease,border-color .15s ease;
+  }
+  .copy-id:hover{
+    color:var(--accent);
+    background:var(--accent-soft);
+    border-color:var(--line);
+  }
+  .copy-id:focus-visible{
+    outline:2px solid var(--accent);
+    outline-offset:2px;
+  }
+  .copy-id svg{
+    width:14px;
+    height:14px;
+    display:block;
+    fill:none;
+    stroke:currentColor;
+    stroke-width:2;
+    stroke-linecap:round;
+    stroke-linejoin:round;
+  }
+  .copy-id .copy-ok{
+    display:none;
+    font-size:13px;
+    line-height:1;
+  }
+  .copy-id.copied{
+    color:var(--accent);
+    background:var(--accent-soft);
+    border-color:var(--accent);
+  }
+  .copy-id.copied svg{display:none}
+  .copy-id.copied .copy-ok{display:inline}
+
+
+  /* 手机：加大点击区域 */
+  .ip-mask{
+    padding:3px 2px;
+    margin:-3px -2px;
+  }
+  @media (max-width:520px){
+    .copy-id{
+      width:32px;
+      height:32px;
+      margin-left:6px;
+    }
+    .copy-id svg{
+      width:15px;
+      height:15px;
+    }
+  }
+</style>
+<script>
+(function () {
+  'use strict';
+
+  var LANG = (document.documentElement.lang || 'en').toLowerCase().slice(0, 2);
+  var T = {
+    en: { showIp: 'Click to show full IP', hideIp: 'Click to hide IP', copy: 'Copy Ray ID', copied: 'Copied' },
+    zh: { showIp: '点击显示完整 IP', hideIp: '点击隐藏 IP', copy: '复制 Ray ID', copied: '已复制' },
+    ja: { showIp: 'クリックでIPを表示', hideIp: 'クリックでIPを隠す', copy: 'Ray ID をコピー', copied: 'コピーしました' }
+  };
+  T = T[LANG] || T.en;
+
+  /* ---------- 当前 IP：默认打码，点击展开 ---------- */
+  var ipEl = document.getElementById('m-ip');
+
+  function maskIp(ip) {
+    if (!ip) return '';
+    if (ip.indexOf(':') !== -1) {
+      var g = ip.split(':');
+      if (g.length > 2) return g.slice(0, g.length - 2).join(':') + ':xxxx:xxxx';
+      return ip;
+    }
+    var p = ip.split('.');
+    if (p.length === 4) return p[0] + '.' + p[1] + '.xxx.xxx';
+    return ip;
+  }
+
+  var fullIp = '';
+  var expanded = false;
+  var lastText = '';
+
+  function renderIp() {
+    if (!ipEl) return;
+    var text = fullIp ? (expanded ? fullIp : maskIp(fullIp)) : '';
+    ipEl.textContent = text;
+    lastText = text;
+  }
+
+  function setIp(value) {
+    fullIp = value || '';
+    expanded = false;
+    renderIp();
+  }
+
+  if (ipEl) {
+    ipEl.classList.add('ip-mask');
+    ipEl.setAttribute('role', 'button');
+    ipEl.setAttribute('tabindex', '0');
+    ipEl.setAttribute('title', T.showIp);
+
+    var toggleIp = function () {
+      if (!fullIp) return;
+      expanded = !expanded;
+      renderIp();
+      ipEl.setAttribute('title', expanded ? T.hideIp : T.showIp);
+    };
+
+    ipEl.addEventListener('click', toggleIp);
+    ipEl.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        toggleIp();
+      }
+    });
+
+    var syncIp = function () {
+      if (!ipEl) return;
+      var v = (ipEl.textContent || '').trim();
+      if (!v) return;
+      if (v.indexOf('::') !== -1) {
+        if (v === lastText) return;
+        fullIp = '';
+        ipEl.textContent = '';
+        lastText = '';
+        return;
+      }
+      if (v === lastText) return;
+      if (v === fullIp) {
+        if (!expanded) renderIp();
+        return;
+      }
+      setIp(v);
+    };
+
+    syncIp();
+
+    var meta = document.getElementById('meta');
+    if (meta && window.MutationObserver) {
+      new MutationObserver(syncIp).observe(meta, {
+        childList: true,
+        characterData: true,
+        subtree: true
+      });
+    }
+  }
+
+  /* ---------- Ray ID：一键复制 ---------- */
+  var rayItem = document.getElementById('mi-ray');
+  var rayEl = document.getElementById('m-ray');
+  if (!rayItem || !rayEl) return;
+
+  var btn = document.createElement('button');
+  btn.type = 'button';
+  btn.className = 'copy-id';
+  btn.setAttribute('aria-label', T.copy);
+  btn.title = T.copy;
+  btn.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true">' +
+    '<rect x="9" y="9" width="11" height="11" rx="2"></rect>' +
+    '<path d="M6 15H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v1"></path>' +
+    '</svg><span class="copy-ok" aria-hidden="true">✓</span>';
+
+  function markCopied() {
+    btn.classList.add('copied');
+    btn.title = T.copied;
+    setTimeout(function () {
+      btn.classList.remove('copied');
+      btn.title = T.copy;
+    }, 1400);
+  }
+
+  function fallbackCopy(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed';
+    ta.style.top = '-1000px';
+    document.body.appendChild(ta);
+    ta.select();
+    try {
+      document.execCommand('copy');
+      markCopied();
+    } catch (e) {}
+    document.body.removeChild(ta);
+  }
+
+  btn.addEventListener('click', function () {
+    var v = (rayEl.textContent || '').trim();
+    if (!v || v.indexOf('::') !== -1) return;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(v).then(markCopied, function () {
+        fallbackCopy(v);
+      });
+    } else {
+      fallbackCopy(v);
+    }
+  });
+
+  rayItem.appendChild(btn);
+})();
+</script>
+</body>
+</html>
